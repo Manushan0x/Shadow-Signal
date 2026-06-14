@@ -1,138 +1,138 @@
-# 🕵️‍♂️ Project Shadow-Signal: Multi-Layer Audio Steganography Suite
+# 🕵️‍♂️ Project Shadow-Signal: Multi-Layer Audio Steganography
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Java](https://img.shields.io/badge/Java-Swing%20%7C%20LSB-orange.svg)
 ![Web](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-yellow.svg)
 
-**Shadow-Signal** is an advanced, two-layer audio steganography system. It conceals classified text messages by first converting them into an acoustic Morse code track hidden in ambient noise, and then cryptographically embedding that entire audio file inside a standard, playable music track using LSB (Least Significant Bit) manipulation.
+**Shadow-Signal** is a two-layer audio steganography suite built for educational and research purposes. It demonstrates how information can be concealed within audio data through two complementary techniques:
 
-> **🎙️ Try the live web decoder here:** [Insert your GitHub Pages link here]
+1. **Acoustic camouflage** — a secret message is converted into a Morse code audio track and hidden beneath procedurally generated ambient noise.
+2. **LSB (Least Significant Bit) steganography** — that resulting audio file is embedded inside the bit structure of a normal, playable music track, leaving it audibly indistinguishable from the original.
+
+A browser-based decoder then uses a Goertzel algorithm (a targeted DSP frequency filter) to extract and translate the hidden Morse signal back into readable text.
+
+> 🎙️ **Live Web Decoder:** [Add your GitHub Pages link here]
 
 ![Hero Image](assets/hero-banner.png)
-> *(Note to developer: Add a banner image here showing the Java terminal and the Web UI side-by-side)*
+*(Suggestion: add a banner image showing the Java terminal output alongside the web decoder UI)*
 
 ---
 
 ## 📑 Table of Contents
-* [The Two-Layer Stealth Architecture](#-the-two-layer-stealth-architecture)
-* [Quick Start: Mission Briefing](#-quick-start-mission-briefing)
-* [Under the Hood: How it Works](#-under-the-hood-how-it-works)
-* [How to Run it Correctly](#-how-to-run-it-correctly)
-* [Directory Structure](#-directory-structure)
+
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [System Architecture & Execution Pipeline](#system-architecture--execution-pipeline)
+  - [Phase 1: Acoustic Camouflage (Layer 1)](#phase-1-acoustic-camouflage-layer-1)
+  - [Phase 2: LSB Steganography (Layer 2)](#phase-2-lsb-steganography-layer-2)
+  - [Phase 3: Extraction & Decoding (Layer 3)](#phase-3-extraction--decoding-layer-3)
+- [Directory Structure](#directory-structure)
+- [Disclaimer](#disclaimer)
+- [License](#license)
 
 ---
 
-## 🏗️ The Two-Layer Stealth Architecture
+## Overview
 
-This project achieves absolute secrecy by using two different methods of audio obfuscation:
+Shadow-Signal walks a message through three stages: encoding it as an acoustic Morse signal, hiding that signal inside a cover song via LSB manipulation, and finally extracting and decoding it back into text using signal processing in the browser. Each phase can be run independently, making it useful as a learning tool for digital signal processing (DSP), audio file formats, and basic steganographic techniques.
 
-1. **Layer 1 (Acoustic Camouflage):** The user inputs a text message. A Java Swing UI converts this text to Morse code (800Hz) and buries it under procedurally generated ambient noise and Gaussian hum.
-2. **Layer 2 (LSB Steganography):** The resulting Morse audio file is treated as raw data. A Java command-line tool (`SenderMain`) embeds this file into the Least Significant Bits of a "cover" song. The final file (`stego_output.wav`) sounds exactly like the original cover song to the human ear.
-3. **Extraction:** The receiver runs `ReceiverMain` to rip the hidden Morse audio file out of the cover song.
-4. **Decryption:** The isolated Morse audio is dropped into a browser-based Goertzel algorithm decoder, which reads the 800Hz envelope and translates it back to English text.
+## Requirements
 
----
-
-## 🚀 Quick Start: Mission Briefing
-
-### Phase 1: Create the Covert Signal
-Run the Desktop UI to generate your encrypted Morse audio.
-1. Run `src/ui/UI.java`.
-2. Type your message and click **Generate Audio**. This creates `output.wav`.
-
-### Phase 2: Embed into Cover Music (LSB Encoding)
-Hide your `output.wav` inside a normal song so you can send it safely over the internet.
-1. Rename `output.wav` to `secret.wav` and place it in the `resources/` folder[cite: 12].
-2. Place any normal WAV song in the `resources/` folder and name it `cover.wav`[cite: 12].
-3. Run the Sender application to generate `stego_output.wav` — a perfectly playable song carrying your hidden message[cite: 12].
-
-### Phase 3: Extraction and Decryption
-When the operative receives `stego_output.wav`, they extract the data.
-1. Place the received `stego_output.wav` file in the `resources/` folder[cite: 10].
-2. Run the Receiver application to extract the hidden track[cite: 10]. This will save the secret audio as `extracted_secret.wav`[cite: 10].
-3. Open `index.html` (the Web Decoder) and drag and drop the newly extracted `extracted_secret.wav` into the dropzone to reveal the text!
+- **Java Development Kit (JDK) 8 or later**
+- A modern web browser (for the Layer 3 decoder)
+- A `.wav` audio file to use as the "cover" track
 
 ---
 
-## 🧮 Under the Hood: How it Works
+## System Architecture & Execution Pipeline
 
-### Audio-in-Audio LSB Steganography
-The `AudioEncoder.java` manipulates the 8-bit sample data of the cover audio. It breaks down the bytes of the secret WAV file into individual bits, replacing only the 1st bit (the least significant bit) of every 8 bytes of the cover song[cite: 7]. It also embeds a 32-bit length header in the first 32 samples so the decoder knows exactly how much data to extract[cite: 7]. This alters the amplitude of the cover song by a maximum of 1/256th per sample, making the alteration mathematically undetectable to the human ear.
+### Phase 1: Acoustic Camouflage (Layer 1)
 
-### Goertzel DFT Envelope Detection
-Once the Morse audio is extracted, the web decoder uses the **Goertzel algorithm** to perform a sliding Discrete Fourier Transform (DFT) across 20ms windows. This acts as a highly targeted bandpass filter, ignoring the ambient hum and locking purely onto the 800Hz Morse carrier wave. 
+**Architecture:** A Java Swing desktop application converts an input text message into Morse code, rendered as an 800 Hz audio tone. This tone is layered beneath procedurally generated ambient noise and Gaussian hum to mask its presence.
+
+**How to run:**
+
+1. Navigate to the `Layer-1-Acoustic-Encoder/` directory.
+2. Compile and launch the desktop UI:
+   ```bash
+   javac src/Main.java
+   java -cp src Main
+   ```
+3. Enter your secret message in the application and click **Generate Audio**.
+4. This produces `output.wav`.
 
 ---
 
-## 💻 How to Run it Correctly
+### Phase 2: LSB Steganography (Layer 2)
 
-If you are using a terminal or command prompt, follow these steps:
+**Architecture:** The Morse-encoded audio file from Phase 1 is treated as raw binary data. A Java command-line tool embeds these bytes into the least significant bit of each sample in a cover song, along with a 32-bit length header. The resulting amplitude change is at most 1/256th per sample — imperceptible to the human ear.
 
-**1. Compile everything first:**
-```bash
-javac src/*.java
+**How to run:**
 
+1. Rename your generated `output.wav` to `secret.wav` and place it in `Layer-2-LSB-Stego/resources/`.
+2. Place any normal, playable WAV file in the same folder and name it `cover.wav`.
+3. Compile and run the sender:
+   ```bash
+   javac src/*.java
+   java -cp src SenderMain
+   ```
+4. This produces `stego_output.wav` — a song that sounds identical to the original but carries the hidden payload.
 
-Phase 2: Embed into Cover Music (LSB Encoding)
-Hide your output.wav inside a normal song so you can transmit it safely.
+---
 
-Rename output.wav to secret.wav and place it in the Layer 2 resources/ folder.
+### Phase 3: Extraction & Decoding (Layer 3)
 
-Place any normal WAV song in the resources/ folder and name it cover.wav.
+**Architecture:** The recipient runs a Java extraction tool to recover the hidden Morse audio track from `stego_output.wav`. The extracted track is then loaded into a browser-based decoder, which applies a sliding Goertzel transform across 20 ms windows to act as a narrow bandpass filter. This isolates the 800 Hz Morse carrier from the ambient noise and converts the resulting timing pattern back into text.
 
-Compile and run the Sender:
+**How to run:**
 
-Bash
-javac src/*.java
-java -cp src SenderMain
-This generates stego_output.wav — a perfectly playable song carrying your hidden message.
+1. Place the received `stego_output.wav` in `Layer-2-LSB-Stego/resources/`.
+2. Run the receiver to extract the hidden track:
+   ```bash
+   java -cp src ReceiverMain
+   ```
+   This saves the result as `extracted_secret.wav`.
+3. Open `Layer-3-Web-Decoder/index.html` in your browser.
+4. Drag and drop `extracted_secret.wav` into the dropzone to view the decoded message as the Goertzel filter isolates the signal.
 
-Phase 3: Extraction and Decryption
-When the receiving operative gets stego_output.wav, they extract the data.
+---
 
-Place the received stego_output.wav file in the Layer 2 resources/ folder.
+## Directory Structure
 
-Run the Receiver to extract the hidden track:
-
-Bash
-java -cp src ReceiverMain
-(This saves the secret audio as extracted_secret.wav)
-
-Open index.html (the Web Decoder) in your browser.
-
-Drag and drop the newly extracted extracted_secret.wav into the dropzone to reveal the classified text.
-
-🧮 Under the Hood: DSP & Cryptography
-Audio-in-Audio LSB Steganography
-The AudioEncoder.java manipulates the 8-bit sample data of the cover audio. It breaks down the bytes of the secret WAV file into individual bits, replacing only the 1st bit (the least significant bit) of every 8 bytes of the cover song. It also embeds a 32-bit length header in the first 32 samples so the decoder knows exactly how much data to extract. This alters the amplitude of the cover song by a maximum of 1/256th per sample, making the alteration mathematically undetectable to the human ear.
-
-Goertzel DFT Envelope Detection
-Once the Morse audio is extracted, the web decoder uses the Goertzel algorithm to perform a sliding Discrete Fourier Transform (DFT) across 20ms windows. This acts as a highly targeted bandpass filter, ignoring the ambient hum and locking purely onto the 800Hz Morse carrier wave.
-
-📁 Directory Structure
-Plaintext
+```
 Shadow-Signal/
 │
-├── Layer-1-Acoustic-Encoder/      # Java Swing UI (Text -> Morse WAV)
+├── Layer-1-Acoustic-Encoder/      # Java Swing UI (text -> Morse WAV)
 │   └── src/
 │       ├── audio/                 # Signal mixing & generation
 │       ├── morse/                 # Text-to-Morse translation
 │       ├── ui/                    # Desktop interface
 │       └── Main.java
 │
-├── Layer-2-LSB-Stego/             # Terminal tools (WAV -> Cover Song)
+├── Layer-2-LSB-Stego/             # CLI tools (Morse WAV -> cover song)
 │   ├── src/
 │   │   ├── AudioEncoder.java
 │   │   ├── AudioDecoder.java
 │   │   ├── SenderMain.java
 │   │   └── ReceiverMain.java
-│   └── resources/                 
-│       ├── cover.wav              # Your normal song (User provided)
-│       ├── secret.wav             # The hidden morse track
-│       ├── stego_output.wav       # The final encoded output
-│       └── extracted_secret.wav   # The decoded output from the receiver
+│   └── resources/
+│       ├── cover.wav              # User-provided cover song
+│       ├── secret.wav             # Hidden Morse track from Layer 1
+│       ├── stego_output.wav       # Final encoded LSB output
+│       └── extracted_secret.wav   # Decoded output from the receiver
 │
-└── Layer-3-Web-Decoder/           # Browser DSP UI (Morse WAV -> Text)
-    ├── index.html        
-    ├── style.css         
+└── Layer-3-Web-Decoder/           # Browser DSP UI (extracted WAV -> text)
+    ├── index.html
+    ├── style.css
     └── decoder.js
+```
+
+---
+
+## Disclaimer
+
+This project is intended for **educational purposes**, to demonstrate concepts in audio processing, signal analysis, and steganography. It is not designed or intended for use in evading lawful monitoring or for any illicit communication.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
