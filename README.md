@@ -11,7 +11,7 @@
 
 A browser-based decoder then uses a Goertzel algorithm (a targeted DSP frequency filter) to extract and translate the hidden Morse signal back into readable text.
 
-> 🎙️ **Live Web Decoder:** [Add your GitHub Pages link here]
+
 
 ![Hero Image](assets/hero-banner.png)
 *(Suggestion: add a banner image showing the Java terminal output alongside the web decoder UI)*
