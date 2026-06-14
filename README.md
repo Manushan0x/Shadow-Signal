@@ -14,7 +14,7 @@ A browser-based decoder then uses a Goertzel algorithm (a targeted DSP frequency
 
 
 ![Hero Image](assets/hero-banner.png)
-*(Suggestion: add a banner image showing the Java terminal output alongside the web decoder UI)*
+
 
 ---
 
