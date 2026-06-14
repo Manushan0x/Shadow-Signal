@@ -58,7 +58,7 @@ Ensure you have the Java Development Kit (JDK) installed.
 ![Java Encoder Demo](assets/encoder-demo.gif)
 > *Note to developer: Record a 5-second GIF of you typing a message into the Java UI and clicking Generate, and save it as `assets/encoder-demo.gif`.*
 
-### Part 2: Intercepting the Signal (Decoder)
+
 No installation required. 
 
 1. Open `decoder-web/index.html` in any modern web browser.
@@ -96,6 +96,14 @@ Shadow-Signal/
 │       ├── morse/        # Text-to-Morse translation
 │       └── ui/           # Desktop interface
 │
+├── Hide with Audio/         # Java  application
+│   └── resources/
+│   └── AudioDecoder.java      
+│   └── AudioEncoder.java 
+│   └── ReceiverMain.java        
+    └── SenderMain.java
+    └── README.md
+
 ├── decoder-web/          # Browser-based extraction tool
 │   ├── index.html        # Spy-terminal interface
 │   ├── style.css         # Classified aesthetics
