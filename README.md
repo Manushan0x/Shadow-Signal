@@ -97,12 +97,12 @@ Shadow-Signal/
 │       └── ui/           # Desktop interface
 │
 ├── Hide with Audio/         # Java  application
-│   └── resources/
-│   └── AudioDecoder.java      
-│   └── AudioEncoder.java 
-│   └── ReceiverMain.java        
-    └── SenderMain.java
-    └── README.md
+   └── resources/
+   └── AudioDecoder.java      
+   └── AudioEncoder.java 
+   └── ReceiverMain.java        
+   └── SenderMain.java
+   └── README.md
 
 ├── decoder-web/          # Browser-based extraction tool
 │   ├── index.html        # Spy-terminal interface
