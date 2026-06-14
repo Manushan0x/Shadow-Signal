@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spy Agent — WAV Morse Decoder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="root">
+    <div class="topbar">
+      <div class="title"><span class="dot blink"></span>WAV MORSE DECODER — CLASSIFIED</div>
+      <div class="tagline">800Hz FILTER ACTIVE</div>
+    </div>
+
+    <div class="body">
+
+      <!-- DROP ZONE -->
+      <div>
+        <div class="panel-label">UPLOAD ENCRYPTED WAV FILE</div>
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".wav">
+          <span class="dz-icon">📡</span>
+          <div class="dz-text">DROP output.wav HERE OR CLICK TO SELECT</div>
+          <div class="dz-sub">FROM YOUR SPY_AGENT JAVA PROJECT</div>
+          <div class="dz-filename" id="filename"></div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-bar-wrap" id="progressWrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="status-line" id="status">WAITING FOR SIGNAL...</div>
+
+      <!-- WAVEFORMS -->
+      <div>
+        <div class="panel-label">RAW SIGNAL</div>
+        <div class="canvas-wrap"><canvas id="rawCanvas" height="60"></canvas></div>
+        <div class="panel-label" style="margin-top:8px;">800Hz BANDPASS FILTERED</div>
+        <div class="canvas-wrap"><canvas id="filtCanvas" height="60"></canvas></div>
+      </div>
+
+      <!-- ENVELOPE -->
+      <div>
+        <div class="panel-label">ENVELOPE DETECTION — MORSE PATTERN</div>
+        <div class="canvas-wrap"><canvas id="envCanvas" height="60"></canvas></div>
+      </div>
+
+      <!-- MORSE -->
+      <div>
+        <div class="panel-label">EXTRACTED MORSE CODE</div>
+        <div class="morse-display" id="morseDisplay"><span class="dim">— AWAITING SIGNAL —</span></div>
+      </div>
+
+      <!-- OUTPUT -->
+      <div>
+        <div class="panel-label">DECRYPTED MESSAGE</div>
+        <div class="output-box">
+          <div class="scanline"></div>
+          <div class="output-text" id="outputText"><span class="dim2">_ _ _ _ _ _ _ _ _ _</span></div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat"><span class="stat-val" id="sChars">—</span><span class="stat-lbl">CHARS</span></div>
+        <div class="stat"><span class="stat-val" id="sWords">—</span><span class="stat-lbl">WORDS</span></div>
+        <div class="stat"><span class="stat-val" id="sDots">—</span><span class="stat-lbl">DOTS</span></div>
+        <div class="stat"><span class="stat-val" id="sDashes">—</span><span class="stat-lbl">DASHES</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="decoder.js"></script>
+</body>
+</html>
