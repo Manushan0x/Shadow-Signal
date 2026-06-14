@@ -71,3 +71,68 @@ If you are using a terminal or command prompt, follow these steps:
 **1. Compile everything first:**
 ```bash
 javac src/*.java
+
+
+Phase 2: Embed into Cover Music (LSB Encoding)
+Hide your output.wav inside a normal song so you can transmit it safely.
+
+Rename output.wav to secret.wav and place it in the Layer 2 resources/ folder.
+
+Place any normal WAV song in the resources/ folder and name it cover.wav.
+
+Compile and run the Sender:
+
+Bash
+javac src/*.java
+java -cp src SenderMain
+This generates stego_output.wav — a perfectly playable song carrying your hidden message.
+
+Phase 3: Extraction and Decryption
+When the receiving operative gets stego_output.wav, they extract the data.
+
+Place the received stego_output.wav file in the Layer 2 resources/ folder.
+
+Run the Receiver to extract the hidden track:
+
+Bash
+java -cp src ReceiverMain
+(This saves the secret audio as extracted_secret.wav)
+
+Open index.html (the Web Decoder) in your browser.
+
+Drag and drop the newly extracted extracted_secret.wav into the dropzone to reveal the classified text.
+
+🧮 Under the Hood: DSP & Cryptography
+Audio-in-Audio LSB Steganography
+The AudioEncoder.java manipulates the 8-bit sample data of the cover audio. It breaks down the bytes of the secret WAV file into individual bits, replacing only the 1st bit (the least significant bit) of every 8 bytes of the cover song. It also embeds a 32-bit length header in the first 32 samples so the decoder knows exactly how much data to extract. This alters the amplitude of the cover song by a maximum of 1/256th per sample, making the alteration mathematically undetectable to the human ear.
+
+Goertzel DFT Envelope Detection
+Once the Morse audio is extracted, the web decoder uses the Goertzel algorithm to perform a sliding Discrete Fourier Transform (DFT) across 20ms windows. This acts as a highly targeted bandpass filter, ignoring the ambient hum and locking purely onto the 800Hz Morse carrier wave.
+
+📁 Directory Structure
+Plaintext
+Shadow-Signal/
+│
+├── Layer-1-Acoustic-Encoder/      # Java Swing UI (Text -> Morse WAV)
+│   └── src/
+│       ├── audio/                 # Signal mixing & generation
+│       ├── morse/                 # Text-to-Morse translation
+│       ├── ui/                    # Desktop interface
+│       └── Main.java
+│
+├── Layer-2-LSB-Stego/             # Terminal tools (WAV -> Cover Song)
+│   ├── src/
+│   │   ├── AudioEncoder.java
+│   │   ├── AudioDecoder.java
+│   │   ├── SenderMain.java
+│   │   └── ReceiverMain.java
+│   └── resources/                 
+│       ├── cover.wav              # Your normal song (User provided)
+│       ├── secret.wav             # The hidden morse track
+│       ├── stego_output.wav       # The final encoded output
+│       └── extracted_secret.wav   # The decoded output from the receiver
+│
+└── Layer-3-Web-Decoder/           # Browser DSP UI (Morse WAV -> Text)
+    ├── index.html        
+    ├── style.css         
+    └── decoder.js
